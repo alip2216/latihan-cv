@@ -392,11 +392,11 @@ if menu == "CV & Portofolio (Publik)":
             """, unsafe_allow_html=True)
             
         with col_m2:
-            # Line chart IPK
+            # Bar chart IPK
             # Convert Semester to string to prevent Vega-Lite Infinite Extent warning on continuous axis
             df_academic["Semester"] = df_academic["Semester"].astype(str)
             chart_data = df_academic.set_index("Semester")[["IPK"]]
-            st.line_chart(chart_data)
+            st.bar_chart(chart_data)
             
         st.markdown("<div style='margin-bottom: 1rem;'></div>", unsafe_allow_html=True)
         col_t1, col_t2, col_t3 = st.columns(3)

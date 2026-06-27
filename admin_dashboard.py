@@ -55,9 +55,9 @@ def show_admin_panel():
         
         all_dfs = load_data()
         if all_dfs:
-            st.sidebar.markdown("### 🗂️ Navigasi Data Excel")
+            st.markdown("### 🗂️ Navigasi Data Excel")
             sheet_names = list(all_dfs.keys())
-            selected_sheet = st.sidebar.radio("Pilih Sheet untuk Diedit:", sheet_names)
+            selected_sheet = st.selectbox("Pilih Sheet untuk Diedit:", sheet_names)
             
             st.markdown(f"**Mengedit Sheet:** `{selected_sheet}`")
             
