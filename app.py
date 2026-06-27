@@ -238,18 +238,22 @@ else:
 # --- 5. HALAMAN PUBLIK ---
 if menu == "CV & Portofolio (Publik)":
     # Hero Section
-    st.markdown("""
-<div style="text-align: center; margin-bottom: 2.5rem; margin-top: 1.5rem;">
-<div style="background-color: rgba(37, 99, 235, 0.1); display: inline-block; padding: 6px 16px; border-radius: 20px; color: var(--primary-color); font-weight: 700; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid rgba(37, 99, 235, 0.2);">
-            <i class="fas fa-rocket" style="margin-right: 6px;"></i> SISTECH Portfolio Expo 2026
+    src_profile = get_image_src("profile.png")
+    img_html = f'<div style="display: flex; justify-content: center; margin-bottom: 20px;"><img src="{src_profile}" style="width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-color); box-shadow: 0 0 25px rgba(37, 99, 235, 0.5);"></div>' if src_profile else ''
+
+    st.markdown(f"""
+<div style="text-align: center; margin-bottom: 3rem; margin-top: 1rem; animation: fadeIn 1s ease-in-out;">
+{img_html}
+<div style="background: linear-gradient(90deg, rgba(37, 99, 235, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%); display: inline-block; padding: 8px 20px; border-radius: 30px; color: #a855f7; font-weight: 700; margin-bottom: 18px; font-size: 0.95rem; border: 1px solid rgba(168, 85, 247, 0.3); box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);">
+            <i class="fas fa-rocket" style="margin-right: 8px;"></i> SISTECH Portfolio Expo 2026
 </div>
-        <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.2;">
+        <h1 style="font-size: 3.5rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.2;">
             <span class="gradient-text">Alif Amunawwar</span>
         </h1>
-<p style="font-size: 1.25rem; font-weight: 600; color: gray; letter-spacing: 0.5px; margin-bottom: 5px;">
+<p style="font-size: 1.3rem; font-weight: 600; color: #94a3b8; letter-spacing: 0.5px; margin-bottom: 8px;">
             Information Systems Student & Fullstack Developer
         </p>
-<p style="font-size: 1.05rem; font-style: italic; color: var(--primary-color); font-weight: 500;">
+<p style="font-size: 1.1rem; font-style: italic; color: #3b82f6; font-weight: 500;">
             "Empowering Future Digital Professionals"
         </p>
 </div>
