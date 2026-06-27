@@ -232,8 +232,8 @@ st.sidebar.divider()
 is_admin_mode = st.query_params.get("admin") == "true"
 
 if is_admin_mode:
-    st.sidebar.markdown("<p style='font-size: 0.85rem; font-weight: 600; color: gray; margin-bottom: 8px;'>NAVIGASI UTAMA</p>", unsafe_allow_html=True)
-    menu = st.sidebar.radio("Pilih Halaman:", ["CV & Portofolio (Publik)", "Admin Panel (Privat)"], label_visibility="collapsed")
+    menu = st.selectbox("🔑 NAVIGASI AKSES:", ["CV & Portofolio (Publik)", "Admin Panel (Privat)"])
+    st.markdown("<div style='margin-bottom: 2rem;'></div>", unsafe_allow_html=True)
 else:
     menu = "CV & Portofolio (Publik)"
 
