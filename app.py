@@ -243,28 +243,18 @@ st.sidebar.divider()
 
 # Check for admin parameter in URL
 is_admin_mode = st.query_params.get("admin") == "true"
-menu = "CV & Portofolio (Publik)"
 
 if is_admin_mode:
-    st.sidebar.markdown("<p style='font-size: 0.85rem; font-weight: 600; color: gray; margin-bottom: 8px;'>🔒 ADMIN ACCESS</p>", unsafe_allow_html=True)
-    if "admin_logged_in" not in st.session_state:
-        st.session_state["admin_logged_in"] = False
-        
-    if not st.session_state["admin_logged_in"]:
-        with st.sidebar.form("sidebar_login_form"):
-            password = st.text_input("Password", type="password")
-            login_btn = st.form_submit_button("Login")
-            if login_btn:
-                if password == "rahasia123":
-                    st.session_state["admin_logged_in"] = True
-                    st.rerun()
-                else:
-                    st.sidebar.error("Password salah!")
-    else:
-        menu = st.sidebar.radio("Pilih Halaman:", ["CV & Portofolio (Publik)", "Admin Panel (Privat)"], label_visibility="collapsed")
-        if st.sidebar.button("Logout"):
+    menu = "Admin Panel (Privat)"
+    st.sidebar.markdown("<p style='font-size: 0.85rem; font-weight: 600; color: gray; margin-bottom: 8px;'>🔒 ADMIN MODE</p>", unsafe_allow_html=True)
+    if st.sidebar.button("🔙 Keluar Mode Admin"):
+        st.query_params.clear()
+        if "admin_logged_in" in st.session_state:
             st.session_state["admin_logged_in"] = False
-            st.rerun()
+        st.rerun()
+else:
+    menu = "CV & Portofolio (Publik)"
+
 
 # --- 5. HALAMAN PUBLIK ---
 if menu == "CV & Portofolio (Publik)":
@@ -402,9 +392,9 @@ if menu == "CV & Portofolio (Publik)":
             """, unsafe_allow_html=True)
             
         with col_m2:
-            # Bar chart IPK
+            # Line chart IPK
             chart_data = df_academic.set_index("Semester")[["IPK"]]
-            st.bar_chart(chart_data)
+            st.line_chart(chart_data)
             
         st.markdown("<div style='margin-bottom: 1rem;'></div>", unsafe_allow_html=True)
         col_t1, col_t2, col_t3 = st.columns(3)
