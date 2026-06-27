@@ -18,81 +18,11 @@ def get_image_src(image_path):
     except Exception:
         return ""
 
-# --- 1. KONEKSI & PERSIAPAN DATABASE ---
-def inisialisasi_db():
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    # Membuat tabel proyek jika belum ada
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS proyek (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nama_proyek TEXT,
-            deskripsi TEXT,
-            gambar TEXT,
-            teknologi TEXT,
-            link TEXT
-        )
-    ''')
-    
-    # Cek apakah tabel kosong untuk diisi data dummy awal
-    cursor.execute("SELECT COUNT(*) FROM proyek")
-    if cursor.fetchone()[0] == 0:
-        contoh_proyek = [
-            ("Afsan Mobile", 
-             "Aplikasi mobile berbasis Dart (Flutter) yang terintegrasi dengan sistem Klinik Afsan untuk memudahkan pasien melakukan reservasi dan memantau antrean secara real-time.",
-             "afsan_mobile.png",
-             "Dart, Flutter",
-             "https://github.com/alip2216"),
-            ("Sikahil Bootcamp", 
-             "Platform pembelajaran web interaktif berbasis PHP. Menyediakan materi pemrograman dan sistem manajemen kelas untuk peserta secara terstruktur.",
-             "sikahil_bootcamp.png",
-             "PHP, Bootstrap, MySQL",
-             "https://github.com/alip2216")
-        ]
-        cursor.executemany("INSERT INTO proyek (nama_proyek, deskripsi, gambar, teknologi, link) VALUES (?, ?, ?, ?, ?)", contoh_proyek)
-        
-    conn.commit()
-    conn.close()
+import admin_dashboard
 
-def ambil_semua_proyek():
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, nama_proyek, deskripsi, gambar, teknologi, link FROM proyek")
-    data = cursor.fetchall()
-    conn.close()
-    return data
+# Ensure database tables exist
+admin_dashboard.inisialisasi_db()
 
-def tambah_proyek_baru(nama, deskripsi, gambar="", teknologi="", link=""):
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO proyek (nama_proyek, deskripsi, gambar, teknologi, link) VALUES (?, ?, ?, ?, ?)", (nama, deskripsi, gambar, teknologi, link))
-    conn.commit()
-    conn.close()
-
-def hapus_proyek(id_proyek):
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM proyek WHERE id = ?", (id_proyek,))
-    conn.commit()
-    conn.close()
-
-def update_proyek(id_proyek, nama, deskripsi, gambar="", teknologi="", link=""):
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("UPDATE proyek SET nama_proyek = ?, deskripsi = ?, gambar = ?, teknologi = ?, link = ? WHERE id = ?", (nama, deskripsi, gambar, teknologi, link, id_proyek))
-    conn.commit()
-    conn.close()
-
-# Jalankan inisialisasi database di awal
-inisialisasi_db()
-
-
-# --- 2. MANAJEMEN STATE LOGIN & EDIT ---
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
-
-if "edit_project_id" not in st.session_state:
-    st.session_state.edit_project_id = None
 
 
 # --- 3. CUSTOM STYLING (CSS) ---
@@ -292,11 +222,17 @@ if menu == "CV & Portofolio (Publik)":
     # Hero Section
     st.markdown("""
     <div style="text-align: center; margin-bottom: 2.5rem; margin-top: 1.5rem;">
+        <div style="background-color: rgba(37, 99, 235, 0.1); display: inline-block; padding: 6px 16px; border-radius: 20px; color: var(--primary-color); font-weight: 700; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid rgba(37, 99, 235, 0.2);">
+            <i class="fas fa-rocket" style="margin-right: 6px;"></i> SISTECH Portfolio Expo 2026
+        </div>
         <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.2;">
             <span class="gradient-text">Alif Amunawwar</span>
         </h1>
-        <p style="font-size: 1.25rem; font-weight: 600; color: gray; letter-spacing: 0.5px;">
+        <p style="font-size: 1.25rem; font-weight: 600; color: gray; letter-spacing: 0.5px; margin-bottom: 5px;">
             Information Systems Student & Fullstack Developer
+        </p>
+        <p style="font-size: 1.05rem; font-style: italic; color: var(--primary-color); font-weight: 500;">
+            "Empowering Future Digital Professionals"
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -400,7 +336,7 @@ if menu == "CV & Portofolio (Publik)":
     
     # Portofolio Proyek (Dinamis dari Database)
     st.subheader("🗂️ Portofolio Proyek Lainnya")
-    daftar_proyek = ambil_semua_proyek()
+    daftar_proyek = admin_dashboard.get_semua_proyek()
     
     if not daftar_proyek:
         st.info("Belum ada proyek lain di portofolio.")
@@ -447,6 +383,52 @@ if menu == "CV & Portofolio (Publik)":
                     </div>
                     """, unsafe_allow_html=True)
                     
+    st.divider()
+    
+    # Sertifikasi (Dinamis dari Database)
+    st.subheader("📜 Lisensi & Sertifikasi")
+    daftar_sertifikat = admin_dashboard.get_semua_sertifikat()
+    
+    if not daftar_sertifikat:
+        st.info("Belum ada sertifikasi.")
+    else:
+        for i in range(0, len(daftar_sertifikat), 2):
+            col1, col2 = st.columns(2, gap="medium")
+            
+            if i < len(daftar_sertifikat):
+                s_id, s_nama, s_penerbit, s_tahun, s_desc, s_gambar, s_link = daftar_sertifikat[i]
+                with col1:
+                    src_url = get_image_src(s_gambar) if s_gambar else ""
+                    img_html = f'<img src="{src_url}" class="card-img" style="height: 140px;">' if src_url else ''
+                    link_html = f'<a href="{s_link}" target="_blank" class="card-btn" style="background-color: #0f172a;">Lihat Sertifikat <i class="fas fa-certificate" style="margin-left:5px;"></i></a>' if s_link else ''
+                    
+                    st.markdown(f"""
+                    <div class="custom-card" style="border-top: 4px solid var(--primary-color);">
+                        {img_html}
+                        <h4 style="margin-top: 0; color: var(--text-color); font-weight: 700; margin-bottom: 4px;">{s_nama}</h4>
+                        <p style="font-weight: 600; font-size: 0.9rem; color: var(--primary-color); margin-bottom: 12px;">{s_penerbit} • {s_tahun}</p>
+                        <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{s_desc}</p>
+                        <div style="margin-top: auto;">{link_html}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+            if i + 1 < len(daftar_sertifikat):
+                s_id, s_nama, s_penerbit, s_tahun, s_desc, s_gambar, s_link = daftar_sertifikat[i+1]
+                with col2:
+                    src_url = get_image_src(s_gambar) if s_gambar else ""
+                    img_html = f'<img src="{src_url}" class="card-img" style="height: 140px;">' if src_url else ''
+                    link_html = f'<a href="{s_link}" target="_blank" class="card-btn" style="background-color: #0f172a;">Lihat Sertifikat <i class="fas fa-certificate" style="margin-left:5px;"></i></a>' if s_link else ''
+                    
+                    st.markdown(f"""
+                    <div class="custom-card" style="border-top: 4px solid var(--primary-color);">
+                        {img_html}
+                        <h4 style="margin-top: 0; color: var(--text-color); font-weight: 700; margin-bottom: 4px;">{s_nama}</h4>
+                        <p style="font-weight: 600; font-size: 0.9rem; color: var(--primary-color); margin-bottom: 12px;">{s_penerbit} • {s_tahun}</p>
+                        <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{s_desc}</p>
+                        <div style="margin-top: auto;">{link_html}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
     # Footer Section (Value-Sell Backend CMS)
     st.markdown("""
     <div style="text-align: center; margin-top: 3.5rem; margin-bottom: 1.5rem; padding: 15px; border-radius: 8px; background-color: rgba(128, 128, 128, 0.05); border: 1px dashed rgba(128, 128, 128, 0.2);">
@@ -461,139 +443,4 @@ if menu == "CV & Portofolio (Publik)":
 
 # --- 6. HALAMAN ADMIN (PRIVAT) ---
 elif menu == "Admin Panel (Privat)":
-    st.markdown("""
-    <div style="text-align: center; margin-bottom: 2rem; margin-top: 1rem;">
-        <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">
-            🔒 <span class="gradient-text">Admin Dashboard</span>
-        </h1>
-        <p style="color: gray;">Kelola data portofolio Anda secara real-time</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Form Login jika belum terotentikasi
-    if not st.session_state.logged_in:
-        col_space1, col_login, col_space2 = st.columns([1, 2, 1])
-        with col_login:
-            st.markdown("""
-            <div class="custom-card" style="margin-bottom: -15px;">
-                <h3 style="margin-top: 0; text-align: center; font-weight: 700; color: var(--primary-color);">Masuk Admin</h3>
-                <p style="font-size: 0.85rem; text-align: center; color: gray; margin-bottom: 10px;">Gunakan akun administrator Anda untuk mengakses panel ini.</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            with st.form("form_login"):
-                username = st.text_input("Username", placeholder="admin")
-                password = st.text_input("Password", type="password", placeholder="••••••••")
-                submit_login = st.form_submit_button("Sign In", use_container_width=True)
-                
-                if submit_login:
-                    if username == "admin" and password == "rahasia123":
-                        st.session_state.logged_in = True
-                        st.success("Login berhasil!")
-                        st.rerun()
-                    else:
-                        st.error("Username atau Password salah!")
-                        
-    # Panel CRUD setelah login
-    else:
-        # Header Status Admin
-        col_status, col_logout = st.columns([5, 1])
-        with col_status:
-            st.markdown("👋 Selamat datang kembali, **Admin**! Anda dapat mengelola proyek publik di bawah ini.")
-        with col_logout:
-            if st.button("Logout", use_container_width=True):
-                st.session_state.logged_in = False
-                st.session_state.edit_project_id = None
-                st.rerun()
-                
-        st.divider()
-        
-        # --- FORM EDIT PROYEK ---
-        if st.session_state.edit_project_id is not None:
-            st.subheader("✏️ Edit Proyek")
-            
-            daftar_proyek = ambil_semua_proyek()
-            proyek_diedit = None
-            for p in daftar_proyek:
-                if p[0] == st.session_state.edit_project_id:
-                    proyek_diedit = p
-                    break
-            
-            if proyek_diedit:
-                with st.form("form_edit_proyek"):
-                    nama_edit = st.text_input("Nama Proyek", value=proyek_diedit[1])
-                    deskripsi_edit = st.text_area("Deskripsi Proyek", value=proyek_diedit[2], height=100)
-                    gambar_edit = st.text_input("URL Gambar Thumbnail", value=proyek_diedit[3] if proyek_diedit[3] else "")
-                    teknologi_edit = st.text_input("Teknologi (pisahkan dengan koma)", value=proyek_diedit[4] if proyek_diedit[4] else "")
-                    link_edit = st.text_input("URL Proyek / GitHub", value=proyek_diedit[5] if proyek_diedit[5] else "")
-                    
-                    col_submit, col_cancel = st.columns(2)
-                    with col_submit:
-                        submit_edit = st.form_submit_button("Simpan Perubahan", use_container_width=True)
-                    with col_cancel:
-                        cancel_edit = st.form_submit_button("Batal", use_container_width=True)
-                    
-                    if submit_edit:
-                        if nama_edit and deskripsi_edit:
-                            update_proyek(st.session_state.edit_project_id, nama_edit, deskripsi_edit, gambar_edit, teknologi_edit, link_edit)
-                            st.session_state.edit_project_id = None
-                            st.success("Proyek berhasil diperbarui!")
-                            st.rerun()
-                        else:
-                            st.warning("Semua kolom harus diisi!")
-                    elif cancel_edit:
-                        st.session_state.edit_project_id = None
-                        st.rerun()
-            else:
-                st.error("Proyek tidak ditemukan.")
-                st.session_state.edit_project_id = None
-                st.rerun()
-                
-        # --- FORM TAMBAH PROYEK BARU ---
-        else:
-            st.subheader("➕ Tambah Proyek Baru")
-            with st.form("form_proyek"):
-                nama_input = st.text_input("Nama Proyek", placeholder="Contoh: Aplikasi Sistem Reservasi")
-                deskripsi_input = st.text_area("Deskripsi Proyek", placeholder="Tulis deskripsi ringkas dan teknologi yang digunakan...", height=120)
-                gambar_input = st.text_input("URL Gambar Thumbnail", placeholder="https://example.com/image.jpg")
-                teknologi_input = st.text_input("Teknologi (pisahkan dengan koma)", placeholder="PHP, Laravel, MySQL")
-                link_input = st.text_input("URL Proyek / GitHub", placeholder="https://github.com/...")
-                submit_button = st.form_submit_button("Simpan Proyek", use_container_width=True)
-                
-                if submit_button:
-                    if nama_input and deskripsi_input:
-                        tambah_proyek_baru(nama_input, deskripsi_input, gambar_input, teknologi_input, link_input)
-                        st.success(f"Proyek '{nama_input}' berhasil ditambahkan!")
-                        st.rerun()
-                    else:
-                        st.warning("Semua kolom harus diisi!")
-        
-        st.divider()
-        st.subheader("📋 Daftar Proyek Saat Ini")
-        
-        daftar_proyek = ambil_semua_proyek()
-        if not daftar_proyek:
-            st.info("Belum ada proyek di database.")
-        else:
-            for proyek in daftar_proyek:
-                p_id, p_nama, p_deskripsi, p_gambar, p_teknologi, p_link = proyek
-                with st.container():
-                    col_info, col_edit, col_delete = st.columns([6, 1, 1])
-                    
-                    with col_info:
-                        st.markdown(f"**{p_nama}**")
-                        st.caption(p_deskripsi)
-                    
-                    with col_edit:
-                        if st.button("Edit", key=f"edit_{p_id}", use_container_width=True):
-                            st.session_state.edit_project_id = p_id
-                            st.rerun()
-                            
-                    with col_delete:
-                        if st.button("Hapus", key=f"delete_{p_id}", use_container_width=True):
-                            hapus_proyek(p_id)
-                            st.rerun()
-                    
-                    st.markdown("<hr style='margin: 12px 0; opacity: 0.15;' />", unsafe_allow_html=True)
-
-
+    admin_dashboard.show_admin_panel()
