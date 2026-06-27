@@ -37,25 +37,43 @@ html, body, p, h1, h2, h3, h4, h5, h6, label, a, li, button, input, textarea {
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-/* Glassmorphic Profile Sidebar & Custom Container */
-[data-testid="stSidebar"] {
-    background-color: var(--secondary-background-color);
-    border-right: 1px solid rgba(128, 128, 128, 0.1);
+/* Hide Streamlit default UI elements */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+
+/* Global Background Enhancement */
+.stApp {
+    background-color: #0f172a;
+    background-image: 
+        radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, hsla(225,39%,30%,0.1) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, hsla(339,49%,30%,0.1) 0, transparent 50%);
+    background-attachment: fixed;
 }
 
-/* Custom cards */
+/* Glassmorphic Profile Sidebar & Custom Container */
+[data-testid="stSidebar"] {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(12px) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Custom cards with Glassmorphism */
 .custom-card {
-    background-color: var(--secondary-background-color);
-    border: 1px solid rgba(128, 128, 128, 0.15);
-    border-radius: 12px;
-    padding: 22px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     flex-direction: column;
     height: 100%;
 }
+
 .card-img {
     width: 100%;
     height: 180px;
@@ -195,11 +213,11 @@ try:
 except Exception:
     # Tampilkan avatar inisial jika gambar tidak termuat
     st.sidebar.markdown("""
-    <div style="text-align: center; margin-bottom: 1.5rem; margin-top: 1rem;">
-        <div style="width: 130px; height: 130px; border-radius: 50%; background-color: var(--primary-color); color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 2.8rem; font-weight: bold; margin: 0 auto;">
+<div style="text-align: center; margin-bottom: 1.5rem; margin-top: 1rem;">
+<div style="width: 130px; height: 130px; border-radius: 50%; background-color: var(--primary-color); color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 2.8rem; font-weight: bold; margin: 0 auto;">
             AA
-        </div>
-    </div>
+</div>
+</div>
     """, unsafe_allow_html=True)
 
 st.sidebar.markdown("<h3 style='text-align: center; margin-bottom: 2px;'>Alif Amunawwar</h3>", unsafe_allow_html=True)
@@ -221,20 +239,20 @@ else:
 if menu == "CV & Portofolio (Publik)":
     # Hero Section
     st.markdown("""
-    <div style="text-align: center; margin-bottom: 2.5rem; margin-top: 1.5rem;">
-        <div style="background-color: rgba(37, 99, 235, 0.1); display: inline-block; padding: 6px 16px; border-radius: 20px; color: var(--primary-color); font-weight: 700; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid rgba(37, 99, 235, 0.2);">
+<div style="text-align: center; margin-bottom: 2.5rem; margin-top: 1.5rem;">
+<div style="background-color: rgba(37, 99, 235, 0.1); display: inline-block; padding: 6px 16px; border-radius: 20px; color: var(--primary-color); font-weight: 700; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid rgba(37, 99, 235, 0.2);">
             <i class="fas fa-rocket" style="margin-right: 6px;"></i> SISTECH Portfolio Expo 2026
-        </div>
+</div>
         <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.2;">
             <span class="gradient-text">Alif Amunawwar</span>
         </h1>
-        <p style="font-size: 1.25rem; font-weight: 600; color: gray; letter-spacing: 0.5px; margin-bottom: 5px;">
+<p style="font-size: 1.25rem; font-weight: 600; color: gray; letter-spacing: 0.5px; margin-bottom: 5px;">
             Information Systems Student & Fullstack Developer
         </p>
-        <p style="font-size: 1.05rem; font-style: italic; color: var(--primary-color); font-weight: 500;">
+<p style="font-size: 1.05rem; font-style: italic; color: var(--primary-color); font-weight: 500;">
             "Empowering Future Digital Professionals"
         </p>
-    </div>
+</div>
     """, unsafe_allow_html=True)
     
     col_dl1, col_dl2, col_dl3 = st.columns([1, 1, 1])
@@ -255,14 +273,14 @@ if menu == "CV & Portofolio (Publik)":
     
     # About Me Section
     st.markdown("""
-    <div class="custom-card" style="margin-bottom: 2.5rem;">
+<div class="custom-card" style="margin-bottom: 2.5rem;">
         <h3 style="margin-top: 0; color: var(--primary-color); font-weight: 700; margin-bottom: 10px;">👨‍💻 About Me</h3>
-        <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 0; opacity: 0.95;">
+<p style="font-size: 1rem; line-height: 1.6; margin-bottom: 0; opacity: 0.95;">
             Saya adalah mahasiswa Sistem Informasi semester 4 yang fokus pada pengembangan backend 
             menggunakan framework Laravel dan Python, serta memiliki minat mendalam pada optimasi database. 
             Saya berdedikasi untuk menciptakan arsitektur kode yang bersih, aman, dan efisien untuk mendukung performa sistem terbaik.
         </p>
-    </div>
+</div>
     """, unsafe_allow_html=True)
     
     # Grid 2 Kolom untuk Kontak & Tech Stack
@@ -271,34 +289,34 @@ if menu == "CV & Portofolio (Publik)":
     with col_profile:
         st.subheader("📌 Kontak & Sosial Media")
         st.markdown("""
-        <div class="custom-card" style="height: calc(100% - 20px);">
-            <div class="contact-item">
+<div class="custom-card" style="height: calc(100% - 20px);">
+<div class="contact-item">
                 <span class="contact-icon"><i class="fab fa-whatsapp"></i></span>
                 <a href="https://wa.me/62881011515321" target="_blank" class="contact-link">0881-0115-15321</a>
-            </div>
-            <div class="contact-item">
+</div>
+<div class="contact-item">
                 <span class="contact-icon"><i class="fas fa-envelope"></i></span>
                 <a href="mailto:alifamunawwar16@gmail.com" class="contact-link">alifamunawwar16@gmail.com</a>
-            </div>
-            <div class="contact-item">
+</div>
+<div class="contact-item">
                 <span class="contact-icon"><i class="fab fa-github"></i></span>
                 <a href="https://github.com/alip2216" target="_blank" class="contact-link">alip2216</a>
-            </div>
-            <div class="contact-item">
+</div>
+<div class="contact-item">
                 <span class="contact-icon"><i class="fab fa-instagram"></i></span>
                 <a href="https://instagram.com/alfanwwar_" target="_blank" class="contact-link">@alfanwwar_</a>
-            </div>
-        </div>
+</div>
+</div>
         """, unsafe_allow_html=True)
         
     with col_tech:
         st.subheader("🛠️ Tech Stack & Keahlian")
         st.markdown("""
-        <div class="custom-card" style="height: calc(100% - 20px);">
-            <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 15px; color: gray;">
+<div class="custom-card" style="height: calc(100% - 20px);">
+<p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 15px; color: gray;">
                 Teknologi yang biasa saya gunakan dalam pengembangan software:
             </p>
-            <div style="display: flex; flex-wrap: wrap;">
+<div style="display: flex; flex-wrap: wrap;">
                 <span class="tech-pill">Laravel 12</span>
                 <span class="tech-pill">Python</span>
                 <span class="tech-pill">Streamlit</span>
@@ -306,8 +324,8 @@ if menu == "CV & Portofolio (Publik)":
                 <span class="tech-pill">SQLite</span>
                 <span class="tech-pill">AJAX</span>
                 <span class="tech-pill">SweetAlert2</span>
-            </div>
-        </div>
+</div>
+</div>
         """, unsafe_allow_html=True)
         
     st.divider()
@@ -315,21 +333,21 @@ if menu == "CV & Portofolio (Publik)":
     # Proyek Utama (Featured Project)
     st.subheader("🔥 Proyek Utama")
     st.markdown("""
-    <div class="featured-card">
+<div class="featured-card">
         <span class="featured-badge">PROYEK UTAMA</span>
         <h3 style="margin-top: 5px; color: var(--primary-color); font-weight: 800; font-size: 1.6rem; margin-bottom: 4px;">Klinik Afsan</h3>
-        <p style="font-weight: 600; font-size: 1.05rem; margin-bottom: 12px; color: var(--text-color); opacity: 0.8;">Sistem ERP & Antrean Klinik Real-time berbasis Laravel 12</p>
-        <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-color); opacity: 0.95;">
+<p style="font-weight: 600; font-size: 1.05rem; margin-bottom: 12px; color: var(--text-color); opacity: 0.8;">Sistem ERP & Antrean Klinik Real-time berbasis Laravel 12</p>
+<p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-color); opacity: 0.95;">
             Klinik Afsan adalah sistem Enterprise Resource Planning (ERP) klinik komprehensif yang dirancang untuk mengotomatisasi
             seluruh alur kerja operasional klinik medis. Dilengkapi fitur manajemen antrean pasien secara real-time,
             rekam medis digital (EMR), manajemen inventaris obat terintegrasi, dan laporan analitik keuangan klinik yang dinamis.
         </p>
-        <div style="margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px;">
+<div style="margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px;">
             <span style="background-color: var(--primary-color); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight:600;">Laravel 12</span>
             <span style="background-color: var(--primary-color); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight:600;">MySQL</span>
             <span style="background-color: var(--primary-color); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight:600;">AJAX & Realtime</span>
-        </div>
-    </div>
+</div>
+</div>
     """, unsafe_allow_html=True)
     
     st.divider()
@@ -355,13 +373,13 @@ if menu == "CV & Portofolio (Publik)":
                     link_html = f'<a href="{p_link}" target="_blank" class="card-btn">Lihat Proyek <i class="fas fa-external-link-alt" style="margin-left:5px;"></i></a>' if p_link else ''
                     
                     st.markdown(f"""
-                    <div class="custom-card">
-                        {gambar_html}
-                        <h4 style="margin-top: 0; color: var(--primary-color); font-weight: 700; margin-bottom: 8px;">{p_nama}</h4>
-                        <div style="margin-bottom: 12px;">{tech_html}</div>
-                        <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{p_deskripsi}</p>
-                        <div style="margin-top: auto;">{link_html}</div>
-                    </div>
+<div class="custom-card">
+{gambar_html}
+<h4 style="margin-top: 0; color: var(--primary-color); font-weight: 700; margin-bottom: 8px;">{p_nama}</h4>
+<div style="margin-bottom: 12px;">{tech_html}</div>
+<p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{p_deskripsi}</p>
+<div style="margin-top: auto;">{link_html}</div>
+</div>
                     """, unsafe_allow_html=True)
             
             # Kolom 2
@@ -374,13 +392,13 @@ if menu == "CV & Portofolio (Publik)":
                     link_html = f'<a href="{p_link}" target="_blank" class="card-btn">Lihat Proyek <i class="fas fa-external-link-alt" style="margin-left:5px;"></i></a>' if p_link else ''
                     
                     st.markdown(f"""
-                    <div class="custom-card">
-                        {gambar_html}
-                        <h4 style="margin-top: 0; color: var(--primary-color); font-weight: 700; margin-bottom: 8px;">{p_nama}</h4>
-                        <div style="margin-bottom: 12px;">{tech_html}</div>
-                        <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{p_deskripsi}</p>
-                        <div style="margin-top: auto;">{link_html}</div>
-                    </div>
+<div class="custom-card">
+{gambar_html}
+<h4 style="margin-top: 0; color: var(--primary-color); font-weight: 700; margin-bottom: 8px;">{p_nama}</h4>
+<div style="margin-bottom: 12px;">{tech_html}</div>
+<p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{p_deskripsi}</p>
+<div style="margin-top: auto;">{link_html}</div>
+</div>
                     """, unsafe_allow_html=True)
                     
     st.divider()
@@ -403,13 +421,13 @@ if menu == "CV & Portofolio (Publik)":
                     link_html = f'<a href="{s_link}" target="_blank" class="card-btn" style="background-color: #0f172a;">Lihat Sertifikat <i class="fas fa-certificate" style="margin-left:5px;"></i></a>' if s_link else ''
                     
                     st.markdown(f"""
-                    <div class="custom-card" style="border-top: 4px solid var(--primary-color);">
-                        {img_html}
-                        <h4 style="margin-top: 0; color: var(--text-color); font-weight: 700; margin-bottom: 4px;">{s_nama}</h4>
-                        <p style="font-weight: 600; font-size: 0.9rem; color: var(--primary-color); margin-bottom: 12px;">{s_penerbit} • {s_tahun}</p>
-                        <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{s_desc}</p>
-                        <div style="margin-top: auto;">{link_html}</div>
-                    </div>
+<div class="custom-card" style="border-top: 4px solid var(--primary-color);">
+{img_html}
+<h4 style="margin-top: 0; color: var(--text-color); font-weight: 700; margin-bottom: 4px;">{s_nama}</h4>
+<p style="font-weight: 600; font-size: 0.9rem; color: var(--primary-color); margin-bottom: 12px;">{s_penerbit} • {s_tahun}</p>
+<p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{s_desc}</p>
+<div style="margin-top: auto;">{link_html}</div>
+</div>
                     """, unsafe_allow_html=True)
                     
             if i + 1 < len(daftar_sertifikat):
@@ -420,24 +438,24 @@ if menu == "CV & Portofolio (Publik)":
                     link_html = f'<a href="{s_link}" target="_blank" class="card-btn" style="background-color: #0f172a;">Lihat Sertifikat <i class="fas fa-certificate" style="margin-left:5px;"></i></a>' if s_link else ''
                     
                     st.markdown(f"""
-                    <div class="custom-card" style="border-top: 4px solid var(--primary-color);">
-                        {img_html}
-                        <h4 style="margin-top: 0; color: var(--text-color); font-weight: 700; margin-bottom: 4px;">{s_nama}</h4>
-                        <p style="font-weight: 600; font-size: 0.9rem; color: var(--primary-color); margin-bottom: 12px;">{s_penerbit} • {s_tahun}</p>
-                        <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{s_desc}</p>
-                        <div style="margin-top: auto;">{link_html}</div>
-                    </div>
+<div class="custom-card" style="border-top: 4px solid var(--primary-color);">
+{img_html}
+<h4 style="margin-top: 0; color: var(--text-color); font-weight: 700; margin-bottom: 4px;">{s_nama}</h4>
+<p style="font-weight: 600; font-size: 0.9rem; color: var(--primary-color); margin-bottom: 12px;">{s_penerbit} • {s_tahun}</p>
+<p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{s_desc}</p>
+<div style="margin-top: auto;">{link_html}</div>
+</div>
                     """, unsafe_allow_html=True)
 
     # Footer Section (Value-Sell Backend CMS)
     st.markdown("""
-    <div style="text-align: center; margin-top: 3.5rem; margin-bottom: 1.5rem; padding: 15px; border-radius: 8px; background-color: rgba(128, 128, 128, 0.05); border: 1px dashed rgba(128, 128, 128, 0.2);">
-        <p style="font-size: 0.85rem; color: gray; margin: 0; line-height: 1.5;">
+<div style="text-align: center; margin-top: 3.5rem; margin-bottom: 1.5rem; padding: 15px; border-radius: 8px; background-color: rgba(128, 128, 128, 0.05); border: 1px dashed rgba(128, 128, 128, 0.2);">
+<p style="font-size: 0.85rem; color: gray; margin: 0; line-height: 1.5;">
             💻 <b>Developer Insights:</b> Website portofolio ini bersifat <b>dinamis</b>. Dibangun secara mandiri menggunakan 
             <b>Python, Streamlit, dan SQLite</b>, lengkap dengan sistem manajemen konten (CMS) di balik <b>Admin Panel</b> 
             untuk pengelolaan data proyek secara real-time.
         </p>
-    </div>
+</div>
     """, unsafe_allow_html=True)
 
 
