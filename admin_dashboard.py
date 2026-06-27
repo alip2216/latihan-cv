@@ -50,28 +50,40 @@ def show_admin_panel():
             st.rerun()
             
         st.divider()
-        st.markdown("### 🗃️ Database Editor")
-        st.caption("Klik dua kali pada sel untuk mengubah data. Anda juga dapat menambah atau menghapus baris di bagian bawah tabel.")
+        st.markdown("### 🗃️ Enterprise Database Editor")
+        st.caption("Kelola seluruh portofolio Anda melalui antarmuka profesional di bawah ini.")
         
         all_dfs = load_data()
         if all_dfs:
-            st.markdown("### 🗂️ Navigasi Data Excel")
             sheet_names = list(all_dfs.keys())
-            selected_sheet = st.selectbox("Pilih Sheet untuk Diedit:", sheet_names)
             
-            st.markdown(f"**Mengedit Sheet:** `{selected_sheet}`")
+            # Membagi layar menjadi 2 kolom (Sidebar Kustom & Ruang Kerja)
+            col_nav, col_workspace = st.columns([1, 4], gap="large")
             
-            # Tampilkan hanya sheet yang dipilih di main area
-            edited_df = st.data_editor(
-                all_dfs[selected_sheet], 
-                num_rows="dynamic",
-                use_container_width=True,
-                key=f"editor_{selected_sheet}",
-                height=400
-            )
+            with col_nav:
+                st.markdown("""
+                <div style="background-color: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                    <h4 style="margin-top: 0; color: #38bdf8; font-size: 1.1rem;">🛠️ Navigasi Sheet</h4>
+                    <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">Pilih tabel untuk diedit</p>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                selected_sheet = st.radio("Pilih Sheet:", sheet_names, label_visibility="collapsed")
             
-            st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
-            if st.button(f"💾 Simpan Perubahan pada {selected_sheet}", type="primary", use_container_width=True):
-                # Update only the edited sheet in the dictionary
-                all_dfs[selected_sheet] = edited_df
-                save_data(all_dfs)
+            with col_workspace:
+                st.markdown(f"<h3 style='margin-top: 0; color: white;'>📄 Lembar Kerja: <span style='color: #a855f7;'>{selected_sheet}</span></h3>", unsafe_allow_html=True)
+                st.caption("💡 Klik dua kali (double-click) pada sel tabel untuk mengubah data. Tekan tanda + di bawah tabel untuk menambah baris baru.")
+                
+                edited_df = st.data_editor(
+                    all_dfs[selected_sheet], 
+                    num_rows="dynamic",
+                    use_container_width=True,
+                    key=f"editor_{selected_sheet}",
+                    height=450
+                )
+                
+                st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+                if st.button(f"💾 Simpan Perubahan pada '{selected_sheet}'", type="primary", use_container_width=True):
+                    # Update only the edited sheet in the dictionary
+                    all_dfs[selected_sheet] = edited_df
+                    save_data(all_dfs)
