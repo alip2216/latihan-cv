@@ -4,6 +4,13 @@ import base64
 import os
 import pandas as pd
 
+st.set_page_config(
+    page_title="Alif Amunawwar - eCV",
+    page_icon="📄",
+    layout="wide",
+    initial_sidebar_state="auto"
+)
+
 def get_image_src(image_path):
     if not image_path:
         return ""
