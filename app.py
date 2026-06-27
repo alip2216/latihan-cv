@@ -277,7 +277,7 @@ if menu == "CV & Portofolio (Publik)":
     
     # Core Tech Stack Showcase
     st.markdown("""
-<div style="text-align: center; margin-bottom: 15px;">
+<div style="text-align: center; margin-bottom: 35px; padding-top: 20px;">
     <p style="color: var(--primary-color); font-weight: 700; letter-spacing: 1px; font-size: 0.9rem; text-transform: uppercase;">🔥 Core Tech Stack</p>
 </div>
 <div style="display: flex; gap: 24px; justify-content: center; margin-bottom: 3.5rem; flex-wrap: wrap;">
@@ -297,7 +297,7 @@ if menu == "CV & Portofolio (Publik)":
     # About Me Section
     st.markdown("""
 <div class="custom-card" style="margin-bottom: 2.5rem;">
-        <h3 style="margin-top: 0; color: var(--primary-color); font-weight: 700; margin-bottom: 10px;">👨‍💻 About Me</h3>
+        <h3 style="margin-top: 0; padding-top: 20px; color: var(--primary-color); font-weight: 700; margin-bottom: 30px;">👨‍💻 About Me</h3>
 <p style="font-size: 1rem; line-height: 1.6; margin-bottom: 0; opacity: 0.95;">
             Saya adalah mahasiswa Sistem Informasi semester 4 yang fokus pada pengembangan backend 
             menggunakan framework Laravel dan Python, serta memiliki minat mendalam pada optimasi database. 
@@ -376,7 +376,7 @@ if menu == "CV & Portofolio (Publik)":
     st.divider()
     
     # Portofolio Proyek (Dinamis dari Database)
-    st.subheader("🗂️ Portofolio Proyek Lainnya")
+    st.markdown("<h3 style='padding-top: 20px; margin-bottom: 30px; font-weight: 700; color: var(--primary-color);'>🗂️ Portofolio Proyek Lainnya</h3>", unsafe_allow_html=True)
     daftar_proyek = admin_dashboard.get_semua_proyek()
     
     if not daftar_proyek:
@@ -400,7 +400,7 @@ if menu == "CV & Portofolio (Publik)":
 {gambar_html}
 <h4 style="margin-top: 0; color: var(--primary-color); font-weight: 700; margin-bottom: 8px;">{p_nama}</h4>
 <div style="margin-bottom: 12px;">{tech_html}</div>
-<p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{p_deskripsi}</p>
+<p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; color: #f1f5f9; flex-grow: 1;">{p_deskripsi}</p>
 <div style="margin-top: auto;">{link_html}</div>
 </div>
                     """, unsafe_allow_html=True)
@@ -419,7 +419,7 @@ if menu == "CV & Portofolio (Publik)":
 {gambar_html}
 <h4 style="margin-top: 0; color: var(--primary-color); font-weight: 700; margin-bottom: 8px;">{p_nama}</h4>
 <div style="margin-bottom: 12px;">{tech_html}</div>
-<p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; opacity: 0.95; flex-grow: 1;">{p_deskripsi}</p>
+<p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; color: #f1f5f9; flex-grow: 1;">{p_deskripsi}</p>
 <div style="margin-top: auto;">{link_html}</div>
 </div>
                     """, unsafe_allow_html=True)
@@ -427,7 +427,7 @@ if menu == "CV & Portofolio (Publik)":
     st.divider()
     
     # Sertifikasi (Dinamis dari Database)
-    st.subheader("📜 Lisensi & Sertifikasi")
+    st.markdown("<h3 style='padding-top: 20px; margin-bottom: 30px; font-weight: 700; color: var(--primary-color);'>📜 Lisensi & Sertifikasi</h3>", unsafe_allow_html=True)
     daftar_sertifikat = admin_dashboard.get_semua_sertifikat()
     
     if not daftar_sertifikat:
