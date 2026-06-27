@@ -197,7 +197,7 @@ header {visibility: hidden;}
 
 /* Gradient text for headers */
 .gradient-text {
-    background: linear-gradient(90deg, var(--primary-color) 0%, #a855f7 100%);
+    background: linear-gradient(90deg, #3b82f6 0%, #a855f7 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 800;
