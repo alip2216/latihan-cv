@@ -55,21 +55,23 @@ def show_admin_panel():
         
         all_dfs = load_data()
         if all_dfs:
-            tabs = st.tabs(list(all_dfs.keys()))
-            edited_dfs = {}
+            st.sidebar.markdown("### 🗂️ Navigasi Data Excel")
+            sheet_names = list(all_dfs.keys())
+            selected_sheet = st.sidebar.radio("Pilih Sheet untuk Diedit:", sheet_names)
             
-            for i, (sheet_name, df) in enumerate(all_dfs.items()):
-                with tabs[i]:
-                    st.markdown(f"**Manajemen Sheet:** `{sheet_name}`")
-                    # data_editor returns a new dataframe with the edits applied
-                    edited_dfs[sheet_name] = st.data_editor(
-                        df, 
-                        num_rows="dynamic",
-                        use_container_width=True,
-                        key=f"editor_{sheet_name}",
-                        height=400
-                    )
+            st.markdown(f"**Mengedit Sheet:** `{selected_sheet}`")
+            
+            # Tampilkan hanya sheet yang dipilih di main area
+            edited_df = st.data_editor(
+                all_dfs[selected_sheet], 
+                num_rows="dynamic",
+                use_container_width=True,
+                key=f"editor_{selected_sheet}",
+                height=400
+            )
             
             st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
-            if st.button("💾 Simpan Semua Perubahan", type="primary", use_container_width=True):
-                save_data(edited_dfs)
+            if st.button(f"💾 Simpan Perubahan pada {selected_sheet}", type="primary", use_container_width=True):
+                # Update only the edited sheet in the dictionary
+                all_dfs[selected_sheet] = edited_df
+                save_data(all_dfs)
