@@ -541,12 +541,11 @@ if menu == "CV & Portofolio (Publik)":
 </div>
                     """, unsafe_allow_html=True)
 
-    # Footer Section (Value-Sell Backend CMS)
     st.markdown("""
 <div style="text-align: center; margin-top: 3.5rem; margin-bottom: 1.5rem; padding: 15px; border-radius: 8px; background-color: rgba(128, 128, 128, 0.05); border: 1px dashed rgba(128, 128, 128, 0.2);">
 <p style="font-size: 0.85rem; color: gray; margin: 0; line-height: 1.5;">
             💻 <b>Developer Insights:</b> Website portofolio ini bersifat <b>dinamis</b>. Dibangun secara mandiri menggunakan 
-            <b>Python, Streamlit, dan SQLite</b>, lengkap dengan sistem manajemen konten (CMS) di balik <b>Admin Panel</b> 
+            <b>Python, Streamlit, dan SQLite</b>, lengkap dengan sistem manajemen konten (CMS) di balik <a href="?admin=true" style="color: gray; text-decoration: none; font-weight: bold;">Admin Panel</a> 
             untuk pengelolaan data proyek secara real-time.
         </p>
 </div>
