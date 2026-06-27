@@ -48,7 +48,7 @@ html, body, p, h1, h2, h3, h4, h5, h6, label, a, li, button, input, textarea {
 [data-testid="stDecoration"] {visibility: hidden !important;}
 [data-testid="stStatusWidget"] {visibility: hidden !important;}
 #MainMenu {visibility: hidden !important;}
-header {visibility: hidden !important;}
+header {background-color: transparent !important;}
 footer {visibility: hidden !important;}
 
 /* Global Background Enhancement */
