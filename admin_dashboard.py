@@ -29,6 +29,22 @@ def inisialisasi_db():
     conn.commit()
     conn.close()
 
+def sync_to_excel():
+    try:
+        conn = sqlite3.connect("cv_data.db")
+        df_proyek = pd.read_sql_query("SELECT * FROM proyek", conn)
+        df_sertifikat = pd.read_sql_query("SELECT * FROM sertifikat", conn)
+        conn.close()
+        
+        df_p_excel = df_proyek.rename(columns={'nama_proyek': 'title', 'deskripsi': 'description', 'teknologi': 'tools'})
+        df_s_excel = df_sertifikat.rename(columns={'nama_sertifikat': 'title', 'penerbit': 'issuer', 'tahun': 'year'})
+        
+        with pd.ExcelWriter("ecv_data.xlsx", mode="a", engine="openpyxl", if_sheet_exists="replace") as writer:
+            df_p_excel.to_excel(writer, sheet_name="Projects", index=False)
+            df_s_excel.to_excel(writer, sheet_name="Certifications", index=False)
+    except Exception as e:
+        print("Error syncing to excel:", e)
+
 # --- Fungsi CRUD Proyek ---
 def get_semua_proyek():
     conn = sqlite3.connect("cv_data.db")
@@ -45,6 +61,7 @@ def tambah_proyek(nama, deskripsi, gambar, teknologi, link):
                    (nama, deskripsi, gambar, teknologi, link))
     conn.commit()
     conn.close()
+    sync_to_excel()
 
 def hapus_proyek(id_proyek):
     conn = sqlite3.connect("cv_data.db")
@@ -52,6 +69,7 @@ def hapus_proyek(id_proyek):
     cursor.execute("DELETE FROM proyek WHERE id = ?", (id_proyek,))
     conn.commit()
     conn.close()
+    sync_to_excel()
     
 def update_proyek(id_proyek, nama, deskripsi, gambar, teknologi, link):
     conn = sqlite3.connect("cv_data.db")
@@ -60,6 +78,7 @@ def update_proyek(id_proyek, nama, deskripsi, gambar, teknologi, link):
                    (nama, deskripsi, gambar, teknologi, link, id_proyek))
     conn.commit()
     conn.close()
+    sync_to_excel()
 
 # --- Fungsi CRUD Sertifikat ---
 def get_semua_sertifikat():
@@ -77,6 +96,7 @@ def tambah_sertifikat(nama, penerbit, tahun, deskripsi, gambar, link):
                    (nama, penerbit, tahun, deskripsi, gambar, link))
     conn.commit()
     conn.close()
+    sync_to_excel()
 
 def hapus_sertifikat(id_sertifikat):
     conn = sqlite3.connect("cv_data.db")
@@ -84,6 +104,7 @@ def hapus_sertifikat(id_sertifikat):
     cursor.execute("DELETE FROM sertifikat WHERE id = ?", (id_sertifikat,))
     conn.commit()
     conn.close()
+    sync_to_excel()
 
 def update_sertifikat(id_sertifikat, nama, penerbit, tahun, deskripsi, gambar, link):
     conn = sqlite3.connect("cv_data.db")
@@ -92,6 +113,7 @@ def update_sertifikat(id_sertifikat, nama, penerbit, tahun, deskripsi, gambar, l
                    (nama, penerbit, tahun, deskripsi, gambar, link, id_sertifikat))
     conn.commit()
     conn.close()
+    sync_to_excel()
 
 
 def show_admin_panel():

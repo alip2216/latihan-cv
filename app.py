@@ -273,7 +273,26 @@ if menu == "CV & Portofolio (Publik)":
         except FileNotFoundError:
             pass
             
-    st.markdown("<div style='margin-bottom: 2.5rem;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-bottom: 2rem;'></div>", unsafe_allow_html=True)
+    
+    # Core Tech Stack Showcase
+    st.markdown("""
+<div style="text-align: center; margin-bottom: 15px;">
+    <p style="color: var(--primary-color); font-weight: 700; letter-spacing: 1px; font-size: 0.9rem; text-transform: uppercase;">🔥 Core Tech Stack</p>
+</div>
+<div style="display: flex; gap: 24px; justify-content: center; margin-bottom: 3.5rem; flex-wrap: wrap;">
+    <div style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 45, 32, 0.3); border-radius: 16px; padding: 20px; text-align: center; width: 220px; box-shadow: 0 10px 30px rgba(255, 45, 32, 0.15); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+        <i class="fab fa-laravel" style="font-size: 3.5rem; color: #FF2D20; margin-bottom: 12px;"></i>
+        <h3 style="margin: 0; color: white; font-weight: 800; font-size: 1.4rem;">Laravel 12</h3>
+        <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px; font-weight: 600;">Backend API Architecture</p>
+    </div>
+    <div style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(69, 209, 253, 0.3); border-radius: 16px; padding: 20px; text-align: center; width: 220px; box-shadow: 0 10px 30px rgba(69, 209, 253, 0.15); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+        <i class="fab fa-fly" style="font-size: 3.5rem; color: #45D1FD; margin-bottom: 12px;"></i>
+        <h3 style="margin: 0; color: white; font-weight: 800; font-size: 1.4rem;">Flutter</h3>
+        <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px; font-weight: 600;">Cross-platform Mobile</p>
+    </div>
+</div>
+    """, unsafe_allow_html=True)
     
     # About Me Section
     st.markdown("""
