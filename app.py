@@ -393,6 +393,8 @@ if menu == "CV & Portofolio (Publik)":
             
         with col_m2:
             # Line chart IPK
+            # Convert Semester to string to prevent Vega-Lite Infinite Extent warning on continuous axis
+            df_academic["Semester"] = df_academic["Semester"].astype(str)
             chart_data = df_academic.set_index("Semester")[["IPK"]]
             st.line_chart(chart_data)
             
