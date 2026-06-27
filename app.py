@@ -2,6 +2,7 @@ import streamlit as st
 import sqlite3
 import base64
 import os
+import pandas as pd
 
 def get_image_src(image_path):
     if not image_path:
