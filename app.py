@@ -8,15 +8,20 @@ def get_image_src(image_path):
         return ""
     if image_path.startswith("http://") or image_path.startswith("https://") or image_path.startswith("data:"):
         return image_path
-    try:
-        with open(image_path, "rb") as f:
-            data = f.read()
-            b64 = base64.b64encode(data).decode()
-            ext = os.path.splitext(image_path)[1][1:].lower()
-            if ext == "jpg": ext = "jpeg"
-            return f"data:image/{ext};base64,{b64}"
-    except Exception:
-        return ""
+    
+    paths_to_try = [image_path, os.path.join("assets", image_path)]
+    for p in paths_to_try:
+        if os.path.exists(p):
+            try:
+                with open(p, "rb") as f:
+                    data = f.read()
+                    b64 = base64.b64encode(data).decode()
+                    ext = os.path.splitext(p)[1][1:].lower()
+                    if ext == "jpg": ext = "jpeg"
+                    return f"data:image/{ext};base64,{b64}"
+            except Exception:
+                pass
+    return ""
 
 import admin_dashboard
 
@@ -212,7 +217,7 @@ footer {visibility: hidden !important;}
 # --- 4. SIDEBAR PANEL (IDENTITAS & NAVIGASI) ---
 # Tampilkan Foto Profil jika ada
 try:
-    st.sidebar.image("profile.png", use_container_width=True)
+    st.sidebar.image("assets/profile.png", use_container_width=True)
 except Exception:
     # Tampilkan avatar inisial jika gambar tidak termuat
     st.sidebar.markdown("""
@@ -230,18 +235,33 @@ st.sidebar.divider()
 
 # Check for admin parameter in URL
 is_admin_mode = st.query_params.get("admin") == "true"
+menu = "CV & Portofolio (Publik)"
 
 if is_admin_mode:
-    menu = st.selectbox("🔑 NAVIGASI AKSES:", ["CV & Portofolio (Publik)", "Admin Panel (Privat)"])
-    st.markdown("<div style='margin-bottom: 2rem;'></div>", unsafe_allow_html=True)
-else:
-    menu = "CV & Portofolio (Publik)"
-
+    st.sidebar.markdown("<p style='font-size: 0.85rem; font-weight: 600; color: gray; margin-bottom: 8px;'>🔒 ADMIN ACCESS</p>", unsafe_allow_html=True)
+    if "admin_logged_in" not in st.session_state:
+        st.session_state["admin_logged_in"] = False
+        
+    if not st.session_state["admin_logged_in"]:
+        with st.sidebar.form("sidebar_login_form"):
+            password = st.text_input("Password", type="password")
+            login_btn = st.form_submit_button("Login")
+            if login_btn:
+                if password == "rahasia123":
+                    st.session_state["admin_logged_in"] = True
+                    st.rerun()
+                else:
+                    st.sidebar.error("Password salah!")
+    else:
+        menu = st.sidebar.radio("Pilih Halaman:", ["CV & Portofolio (Publik)", "Admin Panel (Privat)"], label_visibility="collapsed")
+        if st.sidebar.button("Logout"):
+            st.session_state["admin_logged_in"] = False
+            st.rerun()
 
 # --- 5. HALAMAN PUBLIK ---
 if menu == "CV & Portofolio (Publik)":
     # Hero Section
-    src_profile = get_image_src("profile.png")
+    src_profile = get_image_src("assets/profile.png")
     img_html = f'<div style="display: flex; justify-content: center; margin-bottom: 20px;"><img src="{src_profile}" style="width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary-color); box-shadow: 0 0 25px rgba(37, 99, 235, 0.5);"></div>' if src_profile else ''
 
     st.markdown(f"""
@@ -350,9 +370,49 @@ if menu == "CV & Portofolio (Publik)":
                 <span class="tech-pill">SQLite</span>
                 <span class="tech-pill">AJAX</span>
                 <span class="tech-pill">SweetAlert2</span>
-</div>
-</div>
+            </div>
+        </div>
         """, unsafe_allow_html=True)
+        
+    st.divider()
+    
+    # --- Seksi Akademik & Visualisasi IPK ---
+    st.markdown("<h3 style='padding-top: 20px; margin-bottom: 20px; font-weight: 700; color: var(--primary-color);'>📈 Perkembangan Akademik (IPK)</h3>", unsafe_allow_html=True)
+    
+    try:
+        df_academic = pd.read_excel("ecv_data.xlsx", sheet_name="Academic_data")
+        latest_ipk = df_academic["IPK"].iloc[-1]
+        semester_terakhir = df_academic["Semester"].iloc[-1]
+        
+        col_m1, col_m2 = st.columns([1, 2], gap="medium")
+        with col_m1:
+            st.metric(label=f"IPK Terakhir (Semester {semester_terakhir})", value=f"{latest_ipk:.2f}", delta="Stabil")
+            st.markdown("""
+            <div style="font-size: 0.85rem; color: gray; margin-top: 10px; line-height: 1.4;">
+                *Catatan: Nilai perkembangan IPK diambil secara real-time dari berkas ecv_data.xlsx.*
+            </div>
+            """, unsafe_allow_html=True)
+            
+        with col_m2:
+            # Bar chart IPK
+            chart_data = df_academic.set_index("Semester")[["IPK"]]
+            st.bar_chart(chart_data)
+            
+        st.markdown("<div style='margin-bottom: 1rem;'></div>", unsafe_allow_html=True)
+        col_t1, col_t2, col_t3 = st.columns(3)
+        for idx, row in df_academic.iterrows():
+            sem = row["Semester"]
+            link = row["Link_Bukti"]
+            with [col_t1, col_t2, col_t3][idx % 3]:
+                st.markdown(f"""
+                <div class="custom-card" style="padding: 15px; margin-bottom: 10px; border-top: 2px solid #a855f7;">
+                    <h5 style="margin:0 0 8px 0; color: white;">Transkrip Sem {sem}</h5>
+                    <p style="font-size: 0.8rem; color: gray; margin-bottom: 12px;">NIM disamarkan (Sanitized)</p>
+                    <a href="{link}" target="_blank" class="card-btn" style="padding: 5px 10px; font-size: 0.8rem; text-align: center; display: block; background-color: rgba(37, 99, 235, 0.2); border: 1px solid rgba(37, 99, 235, 0.4);">Lihat Transkrip 🔗</a>
+                </div>
+                """, unsafe_allow_html=True)
+    except Exception as e:
+        st.error(f"Gagal memuat data akademik: {e}")
         
     st.divider()
     
