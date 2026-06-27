@@ -38,9 +38,12 @@ html, body, p, h1, h2, h3, h4, h5, h6, label, a, li, button, input, textarea {
 }
 
 /* Hide Streamlit default UI elements */
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
+[data-testid="stToolbar"] {visibility: hidden !important;}
+[data-testid="stDecoration"] {visibility: hidden !important;}
+[data-testid="stStatusWidget"] {visibility: hidden !important;}
+#MainMenu {visibility: hidden !important;}
+header {visibility: hidden !important;}
+footer {visibility: hidden !important;}
 
 /* Global Background Enhancement */
 .stApp {
@@ -68,7 +71,7 @@ header {visibility: hidden;}
     padding: 24px;
     margin-bottom: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -108,9 +111,9 @@ header {visibility: hidden;}
     background-color: #1d4ed8;
 }
 .custom-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    border-color: var(--primary-color);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.35), 0 0 15px rgba(37, 99, 235, 0.2);
+    border-color: #a855f7;
 }
 
 /* Featured Card for Klinik Afsan */
@@ -286,8 +289,8 @@ if menu == "CV & Portofolio (Publik)":
         <h3 style="margin: 0; color: white; font-weight: 800; font-size: 1.4rem;">Laravel 12</h3>
         <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px; font-weight: 600;">Backend API Architecture</p>
     </div>
-    <div style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(69, 209, 253, 0.3); border-radius: 16px; padding: 20px; text-align: center; width: 220px; box-shadow: 0 10px 30px rgba(69, 209, 253, 0.15); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-        <i class="fab fa-fly" style="font-size: 3.5rem; color: #45D1FD; margin-bottom: 12px;"></i>
+    <div style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(69, 209, 253, 0.3); border-radius: 16px; padding: 20px; text-align: center; width: 220px; box-shadow: 0 10px 30px rgba(69, 209, 253, 0.15); transition: transform 0.3s ease; display: flex; flex-direction: column; align-items: center;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+        <svg viewBox="0 0 24 24" style="width: 3.5rem; height: 3.5rem; fill: #45D1FD; margin-bottom: 12px;" xmlns="http://www.w3.org/2000/svg"><path d="M14.314 0L2.3 12 6 15.7 21.684 0h-7.37zM21.684 10.63L14.31 18 18 21.7 24 15.7v-5.07z"/></svg>
         <h3 style="margin: 0; color: white; font-weight: 800; font-size: 1.4rem;">Flutter</h3>
         <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px; font-weight: 600;">Cross-platform Mobile</p>
     </div>
