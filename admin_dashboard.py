@@ -1,124 +1,32 @@
 import streamlit as st
-import sqlite3
 import pandas as pd
+import os
+
+EXCEL_FILE = "ecv_data.xlsx"
+
+def load_data():
+    try:
+        return pd.read_excel(EXCEL_FILE, sheet_name=None)
+    except Exception as e:
+        st.error(f"Gagal memuat {EXCEL_FILE}: {e}")
+        return None
+
+def save_data(all_dfs):
+    try:
+        with pd.ExcelWriter(EXCEL_FILE, engine="openpyxl") as writer:
+            for sheet_name, df in all_dfs.items():
+                df.to_excel(writer, sheet_name=sheet_name, index=False)
+        st.success("Semua perubahan berhasil disimpan ke Excel secara permanen!")
+    except Exception as e:
+        st.error(f"Gagal menyimpan ke {EXCEL_FILE}: {e}")
 
 def inisialisasi_db():
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS proyek (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nama_proyek TEXT,
-            deskripsi TEXT,
-            gambar TEXT,
-            teknologi TEXT,
-            link TEXT
-        )
-    ''')
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS sertifikat (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nama_sertifikat TEXT,
-            penerbit TEXT,
-            tahun INTEGER,
-            deskripsi TEXT,
-            gambar TEXT,
-            link TEXT
-        )
-    ''')
-    conn.commit()
-    conn.close()
-
-def sync_to_excel():
-    try:
-        conn = sqlite3.connect("cv_data.db")
-        df_proyek = pd.read_sql_query("SELECT * FROM proyek", conn)
-        df_sertifikat = pd.read_sql_query("SELECT * FROM sertifikat", conn)
-        conn.close()
-        
-        df_p_excel = df_proyek.rename(columns={'nama_proyek': 'title', 'deskripsi': 'description', 'teknologi': 'tools'})
-        df_s_excel = df_sertifikat.rename(columns={'nama_sertifikat': 'title', 'penerbit': 'issuer', 'tahun': 'year'})
-        
-        with pd.ExcelWriter("ecv_data.xlsx", mode="a", engine="openpyxl", if_sheet_exists="replace") as writer:
-            df_p_excel.to_excel(writer, sheet_name="Projects", index=False)
-            df_s_excel.to_excel(writer, sheet_name="Certifications", index=False)
-    except Exception as e:
-        print("Error syncing to excel:", e)
-
-# --- Fungsi CRUD Proyek ---
-def get_semua_proyek():
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, nama_proyek, deskripsi, gambar, teknologi, link FROM proyek")
-    data = cursor.fetchall()
-    conn.close()
-    return data
-
-def tambah_proyek(nama, deskripsi, gambar, teknologi, link):
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO proyek (nama_proyek, deskripsi, gambar, teknologi, link) VALUES (?, ?, ?, ?, ?)", 
-                   (nama, deskripsi, gambar, teknologi, link))
-    conn.commit()
-    conn.close()
-    sync_to_excel()
-
-def hapus_proyek(id_proyek):
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM proyek WHERE id = ?", (id_proyek,))
-    conn.commit()
-    conn.close()
-    sync_to_excel()
-    
-def update_proyek(id_proyek, nama, deskripsi, gambar, teknologi, link):
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("UPDATE proyek SET nama_proyek=?, deskripsi=?, gambar=?, teknologi=?, link=? WHERE id=?", 
-                   (nama, deskripsi, gambar, teknologi, link, id_proyek))
-    conn.commit()
-    conn.close()
-    sync_to_excel()
-
-# --- Fungsi CRUD Sertifikat ---
-def get_semua_sertifikat():
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, nama_sertifikat, penerbit, tahun, deskripsi, gambar, link FROM sertifikat")
-    data = cursor.fetchall()
-    conn.close()
-    return data
-
-def tambah_sertifikat(nama, penerbit, tahun, deskripsi, gambar, link):
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO sertifikat (nama_sertifikat, penerbit, tahun, deskripsi, gambar, link) VALUES (?, ?, ?, ?, ?, ?)", 
-                   (nama, penerbit, tahun, deskripsi, gambar, link))
-    conn.commit()
-    conn.close()
-    sync_to_excel()
-
-def hapus_sertifikat(id_sertifikat):
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM sertifikat WHERE id = ?", (id_sertifikat,))
-    conn.commit()
-    conn.close()
-    sync_to_excel()
-
-def update_sertifikat(id_sertifikat, nama, penerbit, tahun, deskripsi, gambar, link):
-    conn = sqlite3.connect("cv_data.db")
-    cursor = conn.cursor()
-    cursor.execute("UPDATE sertifikat SET nama_sertifikat=?, penerbit=?, tahun=?, deskripsi=?, gambar=?, link=? WHERE id=?", 
-                   (nama, penerbit, tahun, deskripsi, gambar, link, id_sertifikat))
-    conn.commit()
-    conn.close()
-    sync_to_excel()
-
+    # Deprecated: SQLite no longer used
+    pass
 
 def show_admin_panel():
-    st.markdown("<h2 style='color: var(--primary-color);'>🔐 Admin Panel</h2>", unsafe_allow_html=True)
-    st.info("Halaman ini bersifat privat. Hanya pemilik eCV yang dapat mengedit konten.")
+    st.markdown("<h2 style='color: var(--primary-color);'>🔐 Admin Panel (Excel Editor)</h2>", unsafe_allow_html=True)
+    st.info("Halaman ini bersifat privat. Anda memiliki kontrol penuh terhadap file ecv_data.xlsx di sini.")
     
     if "admin_logged_in" not in st.session_state:
         st.session_state["admin_logged_in"] = False
@@ -142,112 +50,26 @@ def show_admin_panel():
             st.rerun()
             
         st.divider()
+        st.markdown("### 🗃️ Database Editor")
+        st.caption("Klik dua kali pada sel untuk mengubah data. Anda juga dapat menambah atau menghapus baris di bagian bawah tabel.")
         
-        tab1, tab2 = st.tabs(["Manajemen Proyek", "Manajemen Sertifikasi"])
-        
-        # --- TAB PROYEK ---
-        with tab1:
-            st.subheader("Data Proyek Portofolio")
-            daftar_proyek = get_semua_proyek()
+        all_dfs = load_data()
+        if all_dfs:
+            tabs = st.tabs(list(all_dfs.keys()))
+            edited_dfs = {}
             
-            # Tambah Proyek Baru
-            with st.expander("➕ Tambah Proyek Baru"):
-                with st.form("form_tambah_proyek"):
-                    nama_baru = st.text_input("Nama Proyek")
-                    desc_baru = st.text_area("Deskripsi")
-                    gambar_baru = st.text_input("Nama File Gambar / URL", placeholder="Contoh: afsan_mobile.png")
-                    tech_baru = st.text_input("Teknologi (pisahkan dengan koma)", placeholder="Contoh: Python, Streamlit")
-                    link_baru = st.text_input("Link Proyek", placeholder="URL Github / Website")
-                    submit_baru = st.form_submit_button("Simpan Proyek")
-                    
-                    if submit_baru:
-                        if nama_baru:
-                            tambah_proyek(nama_baru, desc_baru, gambar_baru, tech_baru, link_baru)
-                            st.success("Proyek berhasil ditambahkan!")
-                            st.rerun()
-                        else:
-                            st.error("Nama proyek wajib diisi!")
+            for i, (sheet_name, df) in enumerate(all_dfs.items()):
+                with tabs[i]:
+                    st.markdown(f"**Manajemen Sheet:** `{sheet_name}`")
+                    # data_editor returns a new dataframe with the edits applied
+                    edited_dfs[sheet_name] = st.data_editor(
+                        df, 
+                        num_rows="dynamic",
+                        use_container_width=True,
+                        key=f"editor_{sheet_name}",
+                        height=400
+                    )
             
-            # List Proyek untuk Edit / Hapus
-            st.markdown("#### Daftar Proyek Saat Ini")
-            for p in daftar_proyek:
-                p_id, p_nama, p_deskripsi, p_gambar, p_teknologi, p_link = p
-                with st.container():
-                    st.markdown(f"**{p_nama}**")
-                    col_edit, col_del = st.columns([1, 1])
-                    
-                    with col_edit:
-                        with st.expander(f"✏️ Edit '{p_nama}'"):
-                            with st.form(f"form_edit_{p_id}"):
-                                edit_nama = st.text_input("Nama Proyek", value=p_nama)
-                                edit_desc = st.text_area("Deskripsi", value=p_deskripsi)
-                                edit_gambar = st.text_input("Gambar/URL", value=p_gambar)
-                                edit_tech = st.text_input("Teknologi", value=p_teknologi)
-                                edit_link = st.text_input("Link", value=p_link)
-                                submit_edit = st.form_submit_button("Update Proyek")
-                                
-                                if submit_edit:
-                                    update_proyek(p_id, edit_nama, edit_desc, edit_gambar, edit_tech, edit_link)
-                                    st.success("Diupdate!")
-                                    st.rerun()
-                                    
-                    with col_del:
-                        if st.button(f"🗑️ Hapus '{p_nama}'", key=f"del_p_{p_id}"):
-                            hapus_proyek(p_id)
-                            st.rerun()
-                    st.divider()
-                    
-        # --- TAB SERTIFIKAT ---
-        with tab2:
-            st.subheader("Data Sertifikasi")
-            daftar_sertifikat = get_semua_sertifikat()
-            
-            with st.expander("➕ Tambah Sertifikat Baru"):
-                with st.form("form_tambah_sert"):
-                    s_nama = st.text_input("Nama Sertifikat")
-                    s_penerbit = st.text_input("Penerbit (Issuer)")
-                    s_tahun = st.number_input("Tahun", min_value=1990, max_value=2050, value=2026, step=1)
-                    s_desc = st.text_area("Deskripsi Singkat")
-                    s_gambar = st.text_input("Nama File Gambar / URL (Opsional)")
-                    s_link = st.text_input("Link Sertifikat / Bukti")
-                    s_submit = st.form_submit_button("Simpan Sertifikat")
-                    
-                    if s_submit:
-                        if s_nama:
-                            tambah_sertifikat(s_nama, s_penerbit, s_tahun, s_desc, s_gambar, s_link)
-                            st.success("Sertifikat ditambahkan!")
-                            st.rerun()
-                        else:
-                            st.error("Nama sertifikat wajib diisi!")
-                            
-            st.markdown("#### Daftar Sertifikat Saat Ini")
-            for s in daftar_sertifikat:
-                s_id, s_nama, s_penerbit, s_tahun, s_desc, s_gambar, s_link = s
-                with st.container():
-                    st.markdown(f"**{s_nama} ({s_tahun})** - {s_penerbit}")
-                    c_edit, c_del = st.columns([1, 1])
-                    
-                    with c_edit:
-                        with st.expander(f"✏️ Edit '{s_nama}'"):
-                            with st.form(f"form_edit_s_{s_id}"):
-                                e_nama = st.text_input("Nama Sertifikat", value=s_nama)
-                                e_penerbit = st.text_input("Penerbit", value=s_penerbit)
-                                e_tahun = st.number_input("Tahun", value=s_tahun)
-                                e_desc = st.text_area("Deskripsi", value=s_desc)
-                                e_gambar = st.text_input("Gambar", value=s_gambar)
-                                e_link = st.text_input("Link", value=s_link)
-                                e_submit = st.form_submit_button("Update Sertifikat")
-                                
-                                if e_submit:
-                                    update_sertifikat(s_id, e_nama, e_penerbit, e_tahun, e_desc, e_gambar, e_link)
-                                    st.success("Diupdate!")
-                                    st.rerun()
-                                    
-                    with c_del:
-                        if st.button(f"🗑️ Hapus '{s_nama}'", key=f"del_s_{s_id}"):
-                            hapus_sertifikat(s_id)
-                            st.rerun()
-                    st.divider()
-
-if __name__ == '__main__':
-    inisialisasi_db()
+            st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+            if st.button("💾 Simpan Semua Perubahan", type="primary", use_container_width=True):
+                save_data(edited_dfs)

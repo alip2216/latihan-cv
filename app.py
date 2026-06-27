@@ -438,18 +438,27 @@ if menu == "CV & Portofolio (Publik)":
     
     # Portofolio Proyek (Dinamis dari Database)
     st.markdown("<h3 style='padding-top: 20px; margin-bottom: 30px; font-weight: 700; color: var(--primary-color);'>🗂️ Portofolio Proyek Lainnya</h3>", unsafe_allow_html=True)
-    daftar_proyek = admin_dashboard.get_semua_proyek()
-    
-    if not daftar_proyek:
+    try:
+        df_proyek = pd.read_excel("ecv_data.xlsx", sheet_name="Projects")
+    except Exception:
+        df_proyek = pd.DataFrame()
+        
+    if df_proyek.empty:
         st.info("Belum ada proyek lain di portofolio.")
     else:
         # Tampilkan dalam grid 2 kolom
-        for i in range(0, len(daftar_proyek), 2):
+        for i in range(0, len(df_proyek), 2):
             col1, col2 = st.columns(2, gap="medium")
             
             # Kolom 1
-            if i < len(daftar_proyek):
-                p_id, p_nama, p_deskripsi, p_gambar, p_teknologi, p_link = daftar_proyek[i]
+            if i < len(df_proyek):
+                row1 = df_proyek.iloc[i]
+                p_nama = str(row1.get('title', ''))
+                p_deskripsi = str(row1.get('description', ''))
+                p_teknologi = str(row1.get('tools', ''))
+                p_link = str(row1.get('link', ''))
+                p_link = p_link if p_link.lower() != 'nan' and p_link.strip() else ""
+                p_gambar = "" # Diambil dari Excel tidak ada gambar
                 with col1:
                     src_url = get_image_src(p_gambar)
                     gambar_html = f'<img src="{src_url}" class="card-img">' if src_url else ''
@@ -467,8 +476,14 @@ if menu == "CV & Portofolio (Publik)":
                     """, unsafe_allow_html=True)
             
             # Kolom 2
-            if i + 1 < len(daftar_proyek):
-                p_id, p_nama, p_deskripsi, p_gambar, p_teknologi, p_link = daftar_proyek[i+1]
+            if i + 1 < len(df_proyek):
+                row2 = df_proyek.iloc[i+1]
+                p_nama = str(row2.get('title', ''))
+                p_deskripsi = str(row2.get('description', ''))
+                p_teknologi = str(row2.get('tools', ''))
+                p_link = str(row2.get('link', ''))
+                p_link = p_link if p_link.lower() != 'nan' and p_link.strip() else ""
+                p_gambar = "" 
                 with col2:
                     src_url = get_image_src(p_gambar)
                     gambar_html = f'<img src="{src_url}" class="card-img">' if src_url else ''
@@ -489,16 +504,26 @@ if menu == "CV & Portofolio (Publik)":
     
     # Sertifikasi (Dinamis dari Database)
     st.markdown("<h3 style='padding-top: 20px; margin-bottom: 30px; font-weight: 700; color: var(--primary-color);'>📜 Lisensi & Sertifikasi</h3>", unsafe_allow_html=True)
-    daftar_sertifikat = admin_dashboard.get_semua_sertifikat()
-    
-    if not daftar_sertifikat:
+    try:
+        df_sertifikat = pd.read_excel("ecv_data.xlsx", sheet_name="Certifications")
+    except Exception:
+        df_sertifikat = pd.DataFrame()
+        
+    if df_sertifikat.empty:
         st.info("Belum ada sertifikasi.")
     else:
-        for i in range(0, len(daftar_sertifikat), 2):
+        for i in range(0, len(df_sertifikat), 2):
             col1, col2 = st.columns(2, gap="medium")
             
-            if i < len(daftar_sertifikat):
-                s_id, s_nama, s_penerbit, s_tahun, s_desc, s_gambar, s_link = daftar_sertifikat[i]
+            if i < len(df_sertifikat):
+                r1 = df_sertifikat.iloc[i]
+                s_nama = str(r1.get('title', ''))
+                s_penerbit = str(r1.get('issuer', ''))
+                s_tahun = str(r1.get('year', ''))
+                s_desc = str(r1.get('description', ''))
+                s_link = str(r1.get('link', ''))
+                s_link = s_link if s_link.lower() != 'nan' and s_link.strip() else ""
+                s_gambar = "" 
                 with col1:
                     src_url = get_image_src(s_gambar) if s_gambar else ""
                     img_html = f'<img src="{src_url}" class="card-img" style="height: 140px;">' if src_url else ''
@@ -514,8 +539,15 @@ if menu == "CV & Portofolio (Publik)":
 </div>
                     """, unsafe_allow_html=True)
                     
-            if i + 1 < len(daftar_sertifikat):
-                s_id, s_nama, s_penerbit, s_tahun, s_desc, s_gambar, s_link = daftar_sertifikat[i+1]
+            if i + 1 < len(df_sertifikat):
+                r2 = df_sertifikat.iloc[i+1]
+                s_nama = str(r2.get('title', ''))
+                s_penerbit = str(r2.get('issuer', ''))
+                s_tahun = str(r2.get('year', ''))
+                s_desc = str(r2.get('description', ''))
+                s_link = str(r2.get('link', ''))
+                s_link = s_link if s_link.lower() != 'nan' and s_link.strip() else ""
+                s_gambar = "" 
                 with col2:
                     src_url = get_image_src(s_gambar) if s_gambar else ""
                     img_html = f'<img src="{src_url}" class="card-img" style="height: 140px;">' if src_url else ''
@@ -535,7 +567,7 @@ if menu == "CV & Portofolio (Publik)":
 <div style="text-align: center; margin-top: 3.5rem; margin-bottom: 1.5rem; padding: 15px; border-radius: 8px; background-color: rgba(128, 128, 128, 0.05); border: 1px dashed rgba(128, 128, 128, 0.2);">
 <p style="font-size: 0.85rem; color: gray; margin: 0; line-height: 1.5;">
             💻 <b>Developer Insights:</b> Website portofolio ini bersifat <b>dinamis</b>. Dibangun secara mandiri menggunakan 
-            <b>Python, Streamlit, dan SQLite</b>, lengkap dengan sistem manajemen konten (CMS) di balik <a href="?admin=true" style="color: gray; text-decoration: none; font-weight: bold;">Admin Panel</a> 
+            <b>Python, Streamlit, dan Pandas (Excel)</b>, lengkap dengan sistem manajemen konten (CMS) di balik <a href="?admin=true" style="color: gray; text-decoration: none; font-weight: bold;">Admin Panel</a> 
             untuk pengelolaan data proyek secara real-time.
         </p>
 </div>
