@@ -223,18 +223,6 @@ footer {visibility: hidden !important;}
 
 
 # --- 4. SIDEBAR PANEL (IDENTITAS & NAVIGASI) ---
-# Tampilkan Foto Profil jika ada
-try:
-    st.sidebar.image("assets/profile.png", use_container_width=True)
-except Exception:
-    # Tampilkan avatar inisial jika gambar tidak termuat
-    st.sidebar.markdown("""
-<div style="text-align: center; margin-bottom: 1.5rem; margin-top: 1rem;">
-<div style="width: 130px; height: 130px; border-radius: 50%; background-color: var(--primary-color); color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 2.8rem; font-weight: bold; margin: 0 auto;">
-            AA
-</div>
-</div>
-    """, unsafe_allow_html=True)
 
 st.sidebar.markdown("<h3 style='text-align: center; margin-bottom: 2px;'>Alif Amunawwar</h3>", unsafe_allow_html=True)
 st.sidebar.markdown("<p style='text-align: center; font-style: italic; color: gray; margin-top: 0px; margin-bottom: 20px;'>Fullstack Developer</p>", unsafe_allow_html=True)
